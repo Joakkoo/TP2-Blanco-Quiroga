@@ -91,7 +91,7 @@ app.put('/roles/:id', async (req, res) => {
     await client.query(`
       CREATE TABLE IF NOT EXISTS temperatura(
         id SERIAL PRIMARY KEY,
-        °C VARCHAR(15) NOT NULL,
+        temperatura FLOAT NOT NULL,
         timestamp TIMESTAMP DEFAULT NOW()
       )
     `);
@@ -103,17 +103,17 @@ app.put('/roles/:id', async (req, res) => {
 })();
 
 app.post('/temperatura', async (req, res) => {
-  const { grados, timestamp } = req.body;
-  console.log('Temperatura recibida:', grados, timestamp);
-  // try {
-  //   const client = await pool.connect();
-  //   await client.query('INSERT INTO temperatura (°C, timestamp) VALUES ($1, $2)', [grados, timestamp]);
-  //   client.release();
-  //   res.json({ message: 'Temperatura guardada correctamente' });
-  // } catch (err) {
-  //   console.error('Error al insertar la temperatura', err);
-  //   res.status(500).json({ error: 'Error al insertar la temperatura' });
-  // }
+  const { valor } = req.body;
+  console.log('Temperatura recibida base de datos:', valor);
+   try {
+     const client = await pool.connect();
+     await client.query('INSERT INTO temperatura (temperatura) VALUES ($1)', [valor]);
+     client.release();
+     res.json({ message: 'Temperatura guardada correctamente' });
+   } catch (err) {
+     console.error('Error al insertar la temperatura', err);
+     res.status(500).json({ error: 'Error al insertar la temperatura' });
+   }
 });
 
 
