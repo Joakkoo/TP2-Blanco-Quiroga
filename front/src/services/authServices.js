@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const APIUrl = 'http://localhost.com:4001'
+const APIUrl = 'http://localhost:4002'
 
 export const register = async (username,password) =>{
-    const response = await axios.post(`${APIUrl}/register`, {
+    const response = await axios.post(`${APIUrl}/createuser`, {
         username,
         password,
     })

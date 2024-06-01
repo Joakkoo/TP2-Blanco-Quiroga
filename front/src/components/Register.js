@@ -1,15 +1,20 @@
 import React from "react";
 import *as authService from '../services/authServices.js'
 import { Form, Input, Button, message } from "antd";
-
+import { useNavigate } from "react-router-dom";
 const Register = () => {
     const [form] = Form.useForm();
+    const navigate = useNavigate()
   
     const onFinish = async (values) => {
+        
+
       try {
         const data = await authService.register(values.username, values.password);
         message.success('Registro exitoso');
         console.log(data)
+        navigate('/login')
+
       } catch (error) {
         message.error('Error en el registro');
         console.error('There was an error registering!', error);

@@ -2,11 +2,16 @@ const express = require('express');
 const { Pool } = require('pg');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-// import { verifyToken } from './middleware/jwt.js';
 
+const cors = require('cors')
 const app = express();
+app.use(cors());
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET;
 const PORT2 = process.env.PORT2;
 app.use(bodyParser.json());
+
+
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -15,6 +20,24 @@ const pool = new Pool({
   }
 });
 
+const verifyToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+  
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Token no proporcionado' });
+    }
+  
+    const token = authHeader.split(' ')[1];
+  
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ error: 'Token inválido' });
+      }
+      req.user = decoded;
+      console.log(req.user);
+      next();
+    });
+  };
 
 (async () => {
   const client = await pool.connect();
@@ -53,21 +76,27 @@ app.post('/createuser', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
+  console.log(req.body)
   const { username, password } = req.body;
-  try {
+ 
+   try {
     const client = await pool.connect();
     const result = await client.query('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
-    if (result.rows.length > 0) {
-      return res.status(200).json({ message: "Usuario conectado con exito" });
-    } else {
-      res.status(401).json({ error: "Credenciales Incorrectas" });
-    }
-    const token = generateToken({ userId });
-    res.json({ token });
+    client.release();
 
-  } catch (err) {
-    console.error('Error al ejecutar la query', err);
-    res.status(500).json({ error: 'Error de servidor' });
+    if (result.rows.length === 0) {
+      // Si el usuario no existe o las credenciales son incorrectas, responde con un error 401
+      return res.status(401).json({ error: 'Credenciales incorrectas' });
+    }
+
+    const user = result.rows[0];
+
+    // Si las credenciales son correctas, genera un token y responde con él
+    const token = jwt.sign({ username: user.usuario }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+  } catch (error) {
+    console.error('Error al realizar la consulta a la base de datos', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
