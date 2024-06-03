@@ -1,18 +1,24 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import authService from '../services/authService';
+import *as authService from '../services/authServices.js';
+import UseUser from '../hook/useUser.js';
 
 const Login = () => {
+  const { login } = UseUser()
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
+
     try {
-      const data = await authService.login(values.username, values.password);
-      message.success('Inicio de sesión exitoso');
-      console.log(data);
-      navigate('/home'); // Redirige al path de HomePage
+      const response = await authService.login(values.username, values.password,  { withCredentials: true });
+      if (response&& response.token) {
+        login(response.token, response.userData); 
+        message.success('Inicio de sesión exitoso');
+        console.log(response);
+        navigate('/home'); // Redirige al path de HomePage
+      }
     } catch (error) {
       message.error('Error en el inicio de sesión');
       console.error('There was an error logging in!', error);
@@ -20,15 +26,6 @@ const Login = () => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f0f2f5',
-      }}
-    >
       <Form
         form={form}
         name="login"
@@ -61,8 +58,8 @@ const Login = () => {
           </Button>
         </Form.Item>
       </Form>
-    </div>
   );
 };
+
 
 export default Login;

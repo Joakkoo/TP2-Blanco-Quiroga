@@ -22,7 +22,13 @@ const Register = () => {
     };
 
     return(
-        <Form form={form} name="register" onFinish={onFinish} >
+        <Form form={form} name="register" onFinish={onFinish} style={{
+            width: 300,
+            padding: 20,
+            background: '#fff',
+            borderRadius: 8,
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+          }} >
             <Form.Item
                 name="username"
                 label="Username"

@@ -93,6 +93,7 @@ app.post('/login', async (req, res) => {
 
     // Si las credenciales son correctas, genera un token y responde con él
     const token = jwt.sign({ username: user.usuario }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
     res.json({ token });
   } catch (error) {
     console.error('Error al realizar la consulta a la base de datos', error);
