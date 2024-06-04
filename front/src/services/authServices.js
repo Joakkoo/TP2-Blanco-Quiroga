@@ -20,4 +20,12 @@ export const login = async (username,password) =>{
     return response.data
 }
 
+export const getDataByToken = async (token) => {
 
+    try {
+        const response = await axios.get(`${APIUrl}/userToken`,{headers:{Authorization:`Bearer ${token}`}})
+        return response.data
+    } catch (error) {
+        return null
+    }
+}

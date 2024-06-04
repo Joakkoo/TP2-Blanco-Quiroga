@@ -2,12 +2,11 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import UseUser from '../hook/useUser';
 
-const ProtectedRoute = () => {
+const PublicRoute = () => {
     const { logged } = UseUser();
-    console.log("Estalogueado=",logged)
     return(
-        logged !== false ? <Outlet /> : <Navigate to="/login" replace />
+        logged !== true ? <Outlet /> : <Navigate to="/home" replace />
     )
 }
 
-export default ProtectedRoute;
+export default PublicRoute;

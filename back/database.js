@@ -29,13 +29,26 @@ const verifyToken = (req, res, next) => {
   
     const token = authHeader.split(' ')[1];
   
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET, async(err, decoded) => {
       if (err) {
         return res.status(401).json({ error: 'Token inválido' });
       }
-      req.user = decoded;
-      console.log(req.user);
-      next();
+
+      try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM users WHERE id = $1', [decoded.id]);
+        client.release();
+        if (result.rows.length === 0) {
+          // Si el usuario no existe o las credenciales son incorrectas, responde con un error 401
+          return res.status(401).json({ error: 'Credenciales incorrectas' });
+        }
+        req.user = result.rows[0];
+        console.log(req.user);
+        next()
+      } catch (error) {
+        res.status(503).send({message:"No se encontro usuario."})
+      }
+
     });
   };
 
@@ -92,7 +105,7 @@ app.post('/login', async (req, res) => {
     const user = result.rows[0];
 
     // Si las credenciales son correctas, genera un token y responde con él
-    const token = jwt.sign({ username: user.usuario }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ username: user.usuario, id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
     res.json({ token });
   } catch (error) {
@@ -100,6 +113,13 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
+
+app.get('/userToken', verifyToken ,(req,res) =>{
+
+  res.send(req.user)
+
+})
+
 
 app.put('/roles/:id', async (req, res) => {
   const usuarioId = req.params.id;

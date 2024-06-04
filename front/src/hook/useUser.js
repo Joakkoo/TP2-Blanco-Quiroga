@@ -4,9 +4,9 @@ import { useContext } from "react";
 
 const UseUser = () =>{
 
-    const { token,setToken, userData, login, logout  } = useContext(userContext)
+    const { token,logged,setToken, userData, login, logout  } = useContext(userContext)
 
-    return { token, setToken,  userData, login, logout}
+    return { token,logged, setToken,  userData, login, logout}
 }
 
 
