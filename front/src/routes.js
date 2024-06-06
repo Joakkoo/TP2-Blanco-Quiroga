@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
-import EstadisticasPage from './pages/EstadisticasPage';
+import EstadisticasPage from './pages/EstadisticasPage.js';
 import HomePage from './pages/HomePage.js';
 import ProtectedRoute from './components/ProtectedRoute.js'
 import { UserProvider } from './context/user.js';

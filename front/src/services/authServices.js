@@ -11,6 +11,10 @@ export const register = async (username,password) =>{
     return response.data
 }
 
+export const temperatura = async () =>{
+const response = await axios.get(`${APIUrl}/obtenertemperatura`)
+return response.data
+}
 
 export const login = async (username,password) =>{
     const response = await axios.post(`${APIUrl}/login`, {

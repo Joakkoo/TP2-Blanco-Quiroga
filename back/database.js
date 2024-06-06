@@ -166,6 +166,17 @@ app.post('/temperatura', async (req, res) => {
    }
 });
 
+app.get('/obtenertemperatura', async (req, res) => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM temperatura');
+    client.release();
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error al realizar la consulta a la base de datos', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
 
 app.listen(PORT2, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT2}`);

@@ -1,7 +1,7 @@
 import Estadisticas from "../components/Estadisticas";
 
 
-const HomePage = () =>{
+const EstadisticasPage = () =>{
 
 
     return(
@@ -10,4 +10,4 @@ const HomePage = () =>{
 }
 
 
-export default HomePage
+export default EstadisticasPage
