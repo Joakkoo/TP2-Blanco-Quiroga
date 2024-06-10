@@ -53,6 +53,10 @@ const Login = () => {
             <Button type="primary" htmlType="submit" style={buttonStyle}>
               Ingresar
             </Button>
+
+            <Button type="primary" htmlType="submit" style={buttonStyle} href='./Register'>
+              Registrar
+            </Button>
           </Form.Item>
         </Form>
       </div>
@@ -95,6 +99,7 @@ const formStyle = {
 
 const buttonStyle = {
   width: '100%',
+  marginBottom: 10,
 };
 
 

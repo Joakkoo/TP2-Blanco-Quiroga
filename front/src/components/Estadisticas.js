@@ -133,7 +133,7 @@ export default function Estadisticas() {
           </Col>
           <Col>
             <Button type="primary" href='./Logout'>
-              Logout
+              Salir
             </Button>
           </Col>
         </Row>
