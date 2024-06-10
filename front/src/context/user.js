@@ -28,7 +28,7 @@ export const UserProvider = ({ children }) => {
         return 
 
       }
-      console.log("sdhdshdsa")
+
       const userStorage = localStorage.getItem('userData')
       if(userStorage){
         try {  
@@ -39,8 +39,7 @@ export const UserProvider = ({ children }) => {
         }
       }
       const response = await getDataByToken(token)
-      console.log("julizabaladown")
-      console.log("dhjh",response)
+
       if(response){
         setUserData(response)
         if(logged !== true){
@@ -73,7 +72,7 @@ export const UserProvider = ({ children }) => {
     setToken(null);
     setUserData(null);
     localStorage.removeItem('token');
-    
+    localStorage.removeItem('userData');
     console.log("Token removed from localStorage"); // Log para depuración
     // Elimina también otros datos del usuario si es necesario
   };

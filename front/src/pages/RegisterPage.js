@@ -1,9 +1,8 @@
 import Register from '../components/Register'
-const RegisterPage = () =>{
+const RegisterPage = () => {
 
-    return(
+    return (
         <div>
-            <h1>Register Page</h1>
             <Register />
 
         </div>

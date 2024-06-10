@@ -10,7 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { DatePicker, Row, Col, Space } from 'antd';
+import { DatePicker, Row, Col, Space, Button } from 'antd';
 import moment from 'moment';
 import 'moment/locale/es';
 import { temperatura } from '../services/authServices';
@@ -96,35 +96,85 @@ export default function Estadisticas() {
       {
         label: 'Temperatura',
         data: filteredData.map(value => value.temperatura),
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderColor: '#F28705',
+        backgroundColor: '#F28705',
       },
     ],
   };
 
   return (
-    <div className="container">
+    <div style={containerStyle}>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <Row justify="center" gutter={16}>
+        <Row justify="space-between" align="middle" gutter={16}>
           <Col>
-            <label>Inicio: </label>
-            <DatePicker
-              value={startDate}
-              onChange={(date) => setStartDate(date ? date.startOf('day') : null)}
-              format="YYYY-MM-DD"
-            />
+            <Row justify="center" align="middle" gutter={16}>
+              <Col>
+                <img src="http://metservice.intnet.mu/images/mms-logo.png" alt="Logo" style={logoStyle} />
+              </Col>
+              <Col>
+                <label style={labelStyle}>Inicio: </label>
+                <DatePicker
+                  value={startDate}
+                  onChange={(date) => setStartDate(date ? date.startOf('day') : null)}
+                  format="YYYY-MM-DD"
+                  style={datePickerStyle}
+                />
+              </Col>
+              <Col>
+                <label style={labelStyle}>Final: </label>
+                <DatePicker
+                  value={endDate}
+                  onChange={(date) => setEndDate(date ? date.startOf('day') : null)}
+                  format="YYYY-MM-DD"
+                  style={datePickerStyle}
+                />
+              </Col>
+            </Row>
           </Col>
           <Col>
-            <label>Final: </label>
-            <DatePicker
-              value={endDate}
-              onChange={(date) => setEndDate(date ? date.startOf('day') : null)}
-              format="YYYY-MM-DD"
-            />
+            <Button type="primary" href='./Logout'>
+              Logout
+            </Button>
           </Col>
         </Row>
-        <Line options={options} data={data} />
+        <div style={chartContainerStyle}>
+          <Line options={options} data={data} />
+        </div>
       </Space>
     </div>
-  );
-}
+);
+};
+
+const containerStyle = {
+padding: 20,
+background: '#05F2F2',
+borderRadius: 10,
+boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+maxWidth: 800,
+margin: '0 auto',
+marginTop: 40,
+};
+
+const labelStyle = {
+display: 'block',
+marginBottom: 8,
+fontWeight: 'bold',
+};
+
+const datePickerStyle = {
+width: '100%',
+};
+
+const chartContainerStyle = {
+padding: 20,
+background: '#fff',
+borderRadius: 10,
+boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+marginTop: 20,
+};
+
+const logoStyle = {
+  width: 70,
+  height: 90,
+  marginRight: 20,
+};
